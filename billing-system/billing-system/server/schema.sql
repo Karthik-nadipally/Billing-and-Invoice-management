@@ -1,0 +1,65 @@
+CREATE TABLE IF NOT EXISTS customers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  phone VARCHAR(30),
+  email VARCHAR(255),
+  address TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS products (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  price DECIMAL(12,2) NOT NULL,
+  gst DECIMAL(5,2) DEFAULT 0,
+  stock INT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS invoices (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  invoice_number VARCHAR(50) UNIQUE NOT NULL,
+  customer_id INT NULL,
+  subtotal DECIMAL(12,2) DEFAULT 0,
+  discount DECIMAL(12,2) DEFAULT 0,
+  gst_amount DECIMAL(12,2) DEFAULT 0,
+  total DECIMAL(12,2) DEFAULT 0,
+  amount_paid DECIMAL(12,2) DEFAULT 0,
+  amount_due DECIMAL(12,2) DEFAULT 0,
+  payment_status VARCHAR(20) DEFAULT 'Pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS invoice_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  invoice_id INT NOT NULL,
+  product_id INT NULL,
+  quantity INT NOT NULL,
+  price DECIMAL(12,2) NOT NULL,
+  gst DECIMAL(5,2) DEFAULT 0,
+  total DECIMAL(12,2) NOT NULL,
+  FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS payments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  invoice_id INT NOT NULL,
+  amount DECIMAL(12,2) NOT NULL,
+  payment_method VARCHAR(30) DEFAULT 'Cash',
+  payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (invoice_id) REFERENCES invoices(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS settings (
+  id INT PRIMARY KEY,
+  company_name VARCHAR(255) DEFAULT '',
+  address TEXT,
+  phone VARCHAR(30) DEFAULT '',
+  email VARCHAR(255) DEFAULT '',
+  gst_number VARCHAR(50) DEFAULT '',
+  tax_rate DECIMAL(5,2) DEFAULT 0
+);
+
+INSERT IGNORE INTO settings (id, company_name) VALUES (1, 'My Company');

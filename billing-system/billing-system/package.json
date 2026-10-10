@@ -1,0 +1,23 @@
+{
+  "name": "billing-system",
+  "version": "1.0.0",
+  "description": "Billing & Invoice Management System (React + Express + Node + MySQL)",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "db:init": "node server/initDb.js",
+    "client:dev": "cd client && npm run dev",
+    "build": "cd client && npm install && npm run build"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^5.0.0",
+    "mysql2": "^3.11.0",
+    "pdfkit": "^0.15.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
